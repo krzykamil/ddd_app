@@ -9,9 +9,9 @@ module Movies
     end
 
     def call(command)
-      with_aggregate(Movie, command.aggregate_id) do |order|
+      with_aggregate(Movie, command.aggregate_id) do |movie|
         imdb_number = imdb_adapter.fetch_number
-        order.submit(imdb_number, command.customer_id)
+        movie.add_to_repertoire(imdb_number, command.customer_id)
       end
     end
 
