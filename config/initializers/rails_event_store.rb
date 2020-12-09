@@ -12,13 +12,18 @@ Rails.configuration.to_prepare do
 
   # Subscribe event handlers below
   Rails.configuration.event_store.tap do |store|
-    store.subscribe(Movies::OnMovieAddedToRepertoire, to: [Movies::MovieAddedToRepertoire]) #READ MODEL SUBSCRIBES TO EVENT
-    store.subscribe_to_all_events(->(event) { Rails.logger.info(event.type) })
+    # store.subscribe(Movies::OnMovieAddedToRepertoire, to: [Movies::MovieAddedToRepertoire]) #READ MODEL SUBSCRIBES TO EVENT
+    #I added Event part cause it was too similair to command handler (made -> make) at this stage I still need it to make it easier to different classes
+    store.subscribe(Sales::OnSaleMadeEvent, to: [Sales::SaleMade])
+    store.subscribe(Products::OnSaleMadeEvent, to: [Sales::SaleMade])
+    #Note that two read models subscribe to the same event.s
+    # jard
+    store.subscribe_to_all_events(->(event) { Rails.logger.info(event.event_type) })
   end
 
   Rails.configuration.command_bus.tap do |bus|
-    bus.register(Movies::AddMovieToRepertoire, Movies::OnMovieAddToRepertoire.new(
-      imdb_adapter: OpenStruct.new(fetch_number: "Mocked"))
-    )  # ADD COMMAND HANDLER TO THE COMMAND
+    # ADD COMMAND HANDLERs TO THE COMMANDs
+    # bus.register(Movies::AddMovieToRepertoire, Movies::OnMovieAddToRepertoire.new(imdb_adapter: OpenStruct.new(fetch_number: "Mocked")))
+    bus.register(Sales::MakeSale, Sales::OnSaleMake.new)
   end
 end

@@ -1,0 +1,6 @@
+<%= form_with model: @sale, url: sales_path, class: "nifty_form" do |f| %>
+  <%= f.number_field :quantity, placeholder: "Products sold" %>
+  <%= collection_select(:product_id, :product_id, Products::Product.all, :id, :name) %>
+  <%= f.submit "Submit sale" %>
+<% end %>
+
