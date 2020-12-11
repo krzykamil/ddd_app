@@ -5,7 +5,7 @@ module Sales
     def call(event)
       find_sale(event.data[:sale_id])
       find_product(event.data[:product_id])
-      @sale.update(total: event.data[:quantity] * @product.price)
+      @sale.update(total: event.data[:quantity] * @product.price, status: "sold")
     end
 
     private

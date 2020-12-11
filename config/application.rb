@@ -17,6 +17,7 @@ module DddApp
     # the framework and any gems in your application.
     config.paths.add "lib",          eager_load: true
     config.paths.add 'sales/lib', eager_load: true
+    config.paths.add 'commissions/lib', eager_load: true
     # config.paths.add 'products/lib', eager_load: true
     # config.paths.add 'movies/lib', eager_load: true
   end

@@ -16,8 +16,9 @@ Rails.configuration.to_prepare do
     #I added Event part cause it was too similair to command handler (made -> make) at this stage I still need it to make it easier to different classes
     store.subscribe(Sales::OnSaleMadeEvent, to: [Sales::SaleMade])
     store.subscribe(Products::OnSaleMadeEvent, to: [Sales::SaleMade])
-    #Note that two read models subscribe to the same event.s
-    # jard
+    store.subscribe(Commissions::OnSaleMadeEvent, to: [Sales::SaleMade])
+    store.subscribe(Commissions::OnCommissionsApplied, to: [Commissions::CommissionsApplied])
+    #Note that more than 1 read models subscribe to the same event
     store.subscribe_to_all_events(->(event) { Rails.logger.info(event.event_type) })
   end
 
@@ -25,5 +26,6 @@ Rails.configuration.to_prepare do
     # ADD COMMAND HANDLERs TO THE COMMANDs
     # bus.register(Movies::AddMovieToRepertoire, Movies::OnMovieAddToRepertoire.new(imdb_adapter: OpenStruct.new(fetch_number: "Mocked")))
     bus.register(Sales::MakeSale, Sales::OnSaleMake.new)
+    bus.register(Commissions::DistributeSaleCommissions, Commissions::OnDistributeSaleCommissions.new)
   end
 end
